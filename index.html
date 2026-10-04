@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knight Online - Canlı Drop & Pay Takibi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0c0f17;
+            --bg-card: #151a26;
+            --bg-input: #1e2538;
+            --border-color: #2b344a;
+            --accent-gold: #ffb703;
+            --accent-gold-hover: #fb8500;
+            --text-main: #ffffff;
+            --header-gold: #d4a351;
+        }
+
+        body {
+            background-color: var(--bg-main) !important;
+            color: var(--text-main) !important;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 24px;
+        }
+
+        .text-gold { color: var(--accent-gold) !important; }
+
+        .ko-logo {
+            background-color: var(--header-gold);
+            color: #000;
+            font-weight: 900;
+            font-family: Arial, sans-serif;
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(212, 163, 81, 0.2);
+        }
+
+        .header-title {
+            color: var(--header-gold);
+            font-weight: 900;
+            font-size: 1.6rem;
+            letter-spacing: 0.5px;
+        }
+
+        .header-subtitle {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .stat-card {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .stat-title {
+            color: #e2e8f0;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            font-size: 1.2rem;
+        }
+
+        .form-card {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .form-label {
+            color: #f1f5f9 !important;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+
+        .form-control, .form-select {
+            background-color: var(--bg-input) !important;
+            border: 1px solid var(--border-color) !important;
+            color: #ffffff !important;
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+
+        .form-control::placeholder {
+            color: #94a3b8 !important;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-gold) !important;
+            box-shadow: 0 0 0 2px rgba(255, 183, 3, 0.25);
+        }
+
+        .quick-btn {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: #f8fafc;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-btn:hover {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        .uye-checkbox { display: none; }
+        .uye-label {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .uye-checkbox:checked + .uye-label {
+            background-color: rgba(255, 183, 3, 0.2);
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+        
+        .form-check-input:checked {
+            background-color: #2ecc71;
+            border-color: #2ecc71;
+        }
+        .pay-odendi-text {
+            color: #94a3b8 !important;
+            text-decoration: line-through;
+        }
+
+        .table-card {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .nav-pills .nav-link {
+            color: #cbd5e1 !important;
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: var(--accent-gold) !important;
+            color: #000000 !important;
+            font-weight: 700;
+        }
+
+        .table {
+            color: #ffffff !important;
+            vertical-align: middle;
+            border-color: var(--border-color) !important;
+            --bs-table-bg: transparent !important;
+            --bs-table-color: #ffffff !important;
+            background-color: transparent !important;
+        }
+
+        .table thead tr { background-color: #1a202c !important; }
+        .table th {
+            color: #cbd5e1 !important;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-color) !important;
+            padding: 12px 8px;
+            background-color: transparent !important;
+        }
+
+        .table tbody, .table tr, .table td {
+            background-color: transparent !important;
+            color: #ffffff !important;
+            padding: 12px 8px;
+            border-bottom: 1px solid var(--border-color) !important;
+            font-size: 0.9rem;
+        }
+
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .status-satildi { background-color: rgba(255, 152, 0, 0.2) !important; color: #ff9800 !important; border: 1px solid rgba(255, 152, 0, 0.5); }
+        .status-odendi { background-color: rgba(46, 204, 113, 0.2) !important; color: #2ecc71 !important; border: 1px solid rgba(46, 204, 113, 0.5); }
+        .status-pazarda { background-color: rgba(255, 183, 3, 0.2) !important; color: #ffb703 !important; border: 1px solid rgba(255, 183, 3, 0.5); }
+
+        .btn-gold {
+            background-color: var(--accent-gold);
+            color: #000000;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+        }
+        .btn-gold:hover { background-color: var(--accent-gold-hover); color: #ffffff; }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid max-w-1400">
+        <!-- HEADER -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center gap-3">
+                <div class="ko-logo">KO</div>
+                <div>
+                    <h4 class="mb-0 header-title">CANLI DROP & PAY TAKİBİ</h4>
+                    <span id="modBilgi" class="header-subtitle text-info">Görüntüleyici Modu (Salt Okunur)</span>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button id="adminBtn" class="btn btn-outline-warning btn-sm" onclick="yoneticiGirisYap()">
+                    <i class="fa-solid fa-lock me-1"></i> Yönetici Girişi
+                </button>
+                <button id="sifirlaBtn" class="btn btn-outline-danger btn-sm d-none" onclick="sifirlaHepsini()">
+                    <i class="fa-solid fa-trash me-1"></i> Tümünü Sıfırla
+                </button>
+            </div>
+        </div>
+
+        <!-- İSTATİSTİK KARTLARI -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <span class="stat-title">TOPLAM DROP</span>
+                    <div class="stat-icon bg-secondary bg-opacity-20 text-light"><i class="fa-solid fa-box"></i></div>
+                    <h3 id="stat-drop-adet" class="fw-bold mt-2 mb-0 text-white">0</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <span class="stat-title">TOPLAM GELİR (SATILAN)</span>
+                    <div class="stat-icon bg-success bg-opacity-20 text-success"><i class="fa-solid fa-sack-dollar"></i></div>
+                    <h3 id="stat-toplam-gelir" class="fw-bold text-success mt-2 mb-0">0.00 M</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card border-warning">
+                    <span class="stat-title text-warning">NET PAY BORCU (Ödenmemiş)</span>
+                    <div class="stat-icon bg-warning bg-opacity-20 text-warning"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                    <h3 id="stat-bekleyen-pay" class="fw-bold text-warning mt-2 mb-0">0.00 M</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <span class="stat-title">KASA/PAZAR (SATILMAYAN)</span>
+                    <div class="stat-icon bg-warning bg-opacity-20 text-gold"><i class="fa-solid fa-store"></i></div>
+                    <h3 id="stat-bekleyen-deger" class="fw-bold text-gold mt-2 mb-0">0.00 M</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- YENİ DROP EKLE FORMU (SADECE ADMIN GÖRÜR) -->
+        <div id="adminFormCard" class="form-card mb-4 d-none">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold mb-0 text-gold"><i class="fa-solid fa-circle-plus me-2"></i>Yeni Drop Ekle (Yönetici Paneli)</h6>
+            </div>
+
+            <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+                <span class="text-white me-1 small fw-bold">Hızlı Doldur:</span>
+                <button class="quick-btn" onclick="quickFill('BUS', 2.4)">BUS (2.4M)</button>
+                <button class="quick-btn" onclick="quickFill('Raptor +1', 60)">Raptor (60M)</button>
+                <button class="quick-btn" onclick="quickFill('Chitin Shell', 15)">Chitin Shell (15M)</button>
+                <button class="quick-btn" onclick="quickFill('High Class', 8)">High Class (8M)</button>
+            </div>
+
+            <form id="dropForm">
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                            <label class="form-label text-gold mb-0"><i class="fa-solid fa-users me-1"></i> Party Üyelerini Seçin</label>
+                            <div class="d-flex gap-2" style="max-width: 280px; width: 100%;">
+                                <input type="text" id="yeniUyeInput" class="form-control form-control-sm" placeholder="Yeni nick ekle...">
+                                <button type="button" class="btn btn-gold btn-sm px-3 text-nowrap" onclick="yeniUyeEkle()">Ekle</button>
+                            </div>
+                        </div>
+                        <div id="aktifUyeSecim" class="d-flex flex-wrap gap-2 p-3 bg-dark rounded border border-secondary align-items-center"></div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Drop Adı *</label>
+                        <input type="text" id="dropAd" class="form-control" placeholder="Örn: Raptor +1" required oninput="canliHesapla()">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Adet *</label>
+                        <input type="number" id="dropAdet" class="form-control" min="1" value="1" required oninput="canliHesapla()">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Birim Fiyat (M)</label>
+                        <input type="number" step="0.01" id="dropBirimFiyat" class="form-control" placeholder="Tahmini/Satış" oninput="canliHesapla()">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Kişi Sayısı</label>
+                        <input type="number" id="dropKisi" class="form-control" min="1" value="1" required oninput="canliHesapla()">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Durum</label>
+                        <select id="dropDurum" class="form-select">
+                            <option value="Pazarda">Kasada / Pazarda</option>
+                            <option value="Satıldı">Satıldı</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-12 d-flex align-items-center justify-content-between bg-dark p-3 rounded-3 border border-secondary mt-3">
+                        <div>
+                            <span class="text-muted small d-block">TOPLAM FİYAT</span>
+                            <span id="canliToplam" class="fw-bold text-success fs-4">0.00 M</span>
+                        </div>
+                        <div class="text-end">
+                            <span class="text-muted small d-block">KİŞİ BAŞI PAY</span>
+                            <span id="canliPay" class="fw-bold text-gold fs-4">0.00 M</span>
+                        </div>
+                        <button type="submit" class="btn btn-gold btn-lg px-4"><i class="fa-solid fa-plus me-2"></i> Ekle</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- TABLO ALANI -->
+        <div class="table-card">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <ul class="nav nav-pills" id="tabMenu">
+                    <li class="nav-item">
+                        <button class="nav-link active" onclick="tabDegistir('Pazarda', this)">
+                            Kasada / Pazarda (<span id="count-pazarda">0</span>)
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link text-warning" onclick="tabDegistir('Satıldı', this)">
+                            Satıldı / Pay Bekleyen (<span id="count-satildi">0</span>)
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link text-success" onclick="tabDegistir('Odenen', this)">
+                            Tüm Paylar Dağıtıldı (<span id="count-odenen">0</span>)
+                        </button>
+                    </li>
+                </ul>
+                <div style="width: 250px;">
+                    <input type="text" id="aramaInput" class="form-control" placeholder="Drop veya Nick ara..." onkeyup="renderTable()">
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>EKLENME</th>
+                            <th>SATIŞ ZAMANI</th>
+                            <th>DROP</th>
+                            <th>ADET</th>
+                            <th>B.FİYAT</th>
+                            <th>TOPLAM</th>
+                            <th>KİŞİ BAŞI</th>
+                            <th>PARTY ÜYELERİ (PAY DURUMU)</th>
+                            <th>DURUM</th>
+                            <th id="thIslem" class="text-end d-none">İŞLEM</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dropTableBody">
+                        <!-- JS Dolacak -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- SATIŞ YAP MODAL -->
+    <div class="modal fade" id="satisModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-secondary">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title text-gold" id="modalTitle">Satış Onayı</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="satisForm">
+                        <input type="hidden" id="modalIndex">
+                        <div class="mb-3">
+                            <label class="form-label">Satılacak Adet (Stok: <span id="modalMaxAdet" class="text-gold"></span>)</label>
+                            <input type="number" id="modalSatilanAdet" class="form-control" min="1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Satış Birim Fiyatı (M)</label>
+                            <input type="number" step="0.01" id="modalBirimFiyat" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-gold w-100">Satışı Onayla</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const SCRIPT_URL = "https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnQv3C6sXzhea_sT78H5--5Wg7-_GGHlmkkyNfKM6lf-E7pj9nQKpZptKXsL4wcHqx0M7oe2KHDC-43T7fxpKQDgc_kMNerXD9BLcvbDSDXROH6WI_yMTvC5pT_0efi_hHX71jYKSXhgmr37t3zEf9nL3YDrx0ySIur6JG_J5Wj54vHbU_TVAsZMuqqPx7djoJBY-_4UPrlQDyd0UXv2f0DsKVHLTbS5iy89ESHsZgkuk_Wx6nCfwsdBZmblCQeqLcslfL5rci_kIDqEJQw&lib=M-NGryC69oTVSgZGq5snqZMExezEPBVYO";
+
+        let isAdmin = false;
+        let kayitliUyeler = ['yüksel', 'muti', 'deno', 'eko', 'aylin'];
+        let droplar = [];
+        let aktifTab = 'Pazarda';
+        const satisModal = new bootstrap.Modal(document.getElementById('satisModal'));
+
+        verileriGetir();
+
+        async function verileriGetir() {
+            try {
+                let response = await fetch(SCRIPT_URL);
+                let data = await response.json();
+                if(data && Array.isArray(data)) {
+                    droplar = data;
+                    renderTable();
+                }
+            } catch(e) {
+                console.log("Veri çekilemedi, yerel hafıza kontrol ediliyor...");
+                droplar = JSON.parse(localStorage.getItem('ko_droplar_sheets')) || [];
+                renderTable();
+            }
+            renderUyelerForm();
+        }
+
+        async function verileriKaydet() {
+            if (!isAdmin) return;
+            
+            localStorage.setItem('ko_droplar_sheets', JSON.stringify(droplar));
+
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sifre: "yuksel123", droplar: droplar })
+                });
+            } catch(e) {
+                alert("Google E-Tabloya bağlanırken hata oluştu!");
+            }
+        }
+
+        function yoneticiGirisYap() {
+            if(isAdmin) {
+                isAdmin = false;
+                document.getElementById('modBilgi').innerText = "Görüntüleyici Modu (Salt Okunur)";
+                document.getElementById('modBilgi').className = "header-subtitle text-info";
+                document.getElementById('adminBtn').innerHTML = '<i class="fa-solid fa-lock me-1"></i> Yönetici Girişi';
+                document.getElementById('adminFormCard').classList.add('d-none');
+                document.getElementById('sifirlaBtn').classList.add('d-none');
+                document.getElementById('thIslem').classList.add('d-none');
+                renderTable();
+                return;
+            }
+
+            let sifre = prompt("Yönetici Şifresini Girin:");
+            if(sifre === "yuksel123") {
+                isAdmin = true;
+                document.getElementById('modBilgi').innerText = "Yönetici Modu (Tam Yetki)";
+                document.getElementById('modBilgi').className = "header-subtitle text-success";
+                document.getElementById('adminBtn').innerHTML = '<i class="fa-solid fa-lock-open me-1"></i> Çıkış Yap';
+                document.getElementById('adminFormCard').classList.remove('d-none');
+                document.getElementById('sifirlaBtn').classList.remove('d-none');
+                document.getElementById('thIslem').classList.remove('d-none');
+                renderTable();
+                alert("Yönetici olarak giriş yapıldı!");
+            } else if(sifre !== null) {
+                alert("Yanlış şifre!");
+            }
+        }
+
+        function yeniUyeEkle() {
+            const input = document.getElementById('yeniUyeInput');
+            const yeniUye = input.value.trim();
+            if(!yeniUye) return;
+            if(!kayitliUyeler.includes(yeniUye)) {
+                kayitliUyeler.push(yeniUye);
+                if(kayitliUyeler.length > 15) kayitliUyeler.shift();
+                input.value = '';
+                renderUyelerForm();
+            }
+        }
+
+        function uyeSil(nick) {
+            kayitliUyeler = kayitliUyeler.filter(u => u !== nick);
+            renderUyelerForm();
+        }
+
+        function renderUyelerForm() {
+            const div = document.getElementById('aktifUyeSecim');
+            div.innerHTML = kayitliUyeler.map(nick => `
+                <div class="d-flex align-items-center gap-1 bg-input px-2 py-1 rounded-pill border border-secondary" style="background-color: var(--bg-input);">
+                    <input type="checkbox" id="uye_${nick}" value="${nick}" class="uye-checkbox form-check-input" onchange="uyeSecimDegisti()">
+                    <label for="uye_${nick}" class="uye-label border-0 bg-transparent py-0 px-1 m-0">${nick}</label>
+                    ${isAdmin ? `<button type="button" class="btn btn-sm text-danger p-0 ms-1" onclick="uyeSil('${nick}')"><i class="fa-solid fa-xmark"></i></button>` : ''}
+                </div>
+            `).join('');
+            
+            const kendim = document.getElementById('uye_yüksel');
+            if(kendim && !document.querySelectorAll('.uye-checkbox:checked').length) kendim.checked = true;
+            uyeSecimDegisti();
+        }
+
+        function uyeSecimDegisti() {
+            const secilenSayisi = document.querySelectorAll('.uye-checkbox:checked').length;
+            document.getElementById('dropKisi').value = secilenSayisi > 0 ? secilenSayisi : 1;
+            canliHesapla();
+        }
+
+        function canliHesapla() {
+            const adet = parseFloat(document.getElementById('dropAdet').value) || 0;
+            const fiyat = parseFloat(document.getElementById('dropBirimFiyat').value) || 0;
+            const kisi = parseFloat(document.getElementById('dropKisi').value) || 1;
+            const toplam = adet * fiyat;
+            const pay = kisi > 0 ? toplam / kisi : 0;
+            document.getElementById('canliToplam').innerText = toplam.toFixed(2) + ' M';
+            document.getElementById('canliPay').innerText = pay.toFixed(2) + ' M';
+        }
+
+        function quickFill(ad, fiyat) {
+            document.getElementById('dropAd').value = ad;
+            document.getElementById('dropBirimFiyat').value = fiyat;
+            canliHesapla();
+        }
+
+        document.getElementById('dropForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if(!isAdmin) return;
+            const ad = document.getElementById('dropAd').value.trim();
+            const adet = parseInt(document.getElementById('dropAdet').value);
+            const birimFiyat = parseFloat(document.getElementById('dropBirimFiyat').value) || 0;
+            const kisi = parseInt(document.getElementById('dropKisi').value);
+            const durum = document.getElementById('dropDurum').value;
+            
+            const seciliUyeler = [];
+            document.querySelectorAll('.uye-checkbox:checked').forEach(cb => {
+                seciliUyeler.push({ nick: cb.value, odendi: false });
+            });
+
+            const simdi = new Date().toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+            const yeniDrop = {
+                id: Date.now(),
+                eklemeTarihi: simdi,
+                satisTarihi: durum === 'Satıldı' ? simdi : '',
+                ad,
+                adet,
+                birimFiyat,
+                kisi,
+                durum,
+                uyeler: seciliUyeler,
+                payOdendi: false
+            };
+
+            droplar.unshift(yeniDrop);
+            verileriKaydet();
+            renderTable();
+
+            document.getElementById('dropAd').value = '';
+            document.getElementById('dropBirimFiyat').value = '';
+            canliHesapla();
+        });
+
+        function toggleUyePay(dropId, nick) {
+            if(!isAdmin) return;
+            const drop = droplar.find(d => d.id == dropId);
+            if (!drop || !drop.uyeler) return;
+
+            const uye = drop.uyeler.find(u => u.nick === nick);
+            if (uye) uye.odendi = !uye.odendi;
+
+            drop.payOdendi = drop.uyeler.every(u => u.odendi);
+            verileriKaydet();
+            renderTable();
+        }
+
+        function topluPayVer(dropId) {
+            if(!isAdmin) return;
+            const drop = droplar.find(d => d.id == dropId);
+            if(drop && drop.uyeler) {
+                drop.uyeler.forEach(u => u.odendi = true);
+                drop.payOdendi = true;
+                verileriKaydet();
+                renderTable();
+            }
+        }
+
+        function payIptal(dropId) {
+            if(!isAdmin) return;
+            const drop = droplar.find(d => d.id == dropId);
+            if(drop && drop.uyeler) {
+                drop.uyeler.forEach(u => u.odendi = false);
+                drop.payOdendi = false;
+                verileriKaydet();
+                renderTable();
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('dropTableBody');
+            const arama = document.getElementById('aramaInput').value.toLowerCase();
+            tbody.innerHTML = '';
+
+            let filtered = droplar.filter(d => {
+                let tabMatch = false;
+                if (aktifTab === 'Pazarda') tabMatch = d.durum === 'Pazarda';
+                else if (aktifTab === 'Satıldı') tabMatch = d.durum === 'Satıldı' && !d.payOdendi;
+                else if (aktifTab === 'Odenen') tabMatch = d.durum === 'Satıldı' && d.payOdendi;
+
+                const searchMatch = d.ad.toLowerCase().includes(arama) || 
+                                    (d.uyeler && d.uyeler.some(u => u.nick.toLowerCase().includes(arama)));
+                return tabMatch && searchMatch;
+            });
+
+            document.getElementById('count-pazarda').innerText = droplar.filter(d => d.durum === 'Pazarda').length;
+            document.getElementById('count-satildi').innerText = droplar.filter(d => d.durum === 'Satıldı' && !d.payOdendi).length;
+            document.getElementById('count-odenen').innerText = droplar.filter(d => d.durum === 'Satıldı' && d.payOdendi).length;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">Bu sekmede kayıtlı veri bulunamadı.</td></tr>';
+                return;
+            }
+
+            filtered.forEach((d) => {
+                const toplamFiyat = d.adet * d.birimFiyat;
+                const kisiBasiPay = d.kisi > 0 ? toplamFiyat / d.kisi : 0;
+                
+                let uyelerHtml = `<div class="d-flex flex-column gap-1">`;
+                if (d.uyeler && d.uyeler.length > 0) {
+                    d.uyeler.forEach(u => {
+                        const disabledDurum = (!isAdmin || d.durum === 'Pazarda') ? 'disabled' : '';
+                        uyelerHtml += `
+                            <div class="form-check form-switch m-0 p-0 d-flex align-items-center gap-2">
+                                <input class="form-check-input m-0" type="checkbox" role="switch"
+                                       onchange="toggleUyePay(${d.id}, '${u.nick}')" 
+                                       ${u.odendi ? 'checked' : ''} ${disabledDurum}>
+                                <label class="form-check-label mb-0 small ${u.odendi ? 'pay-odendi-text' : 'text-white'}">
+                                       ${u.nick}
+                                </label>
+                            </div>
+                        `;
+                    });
+                } else {
+                    uyelerHtml += '<span class="text-muted small">Kişi Seçilmemiş</span>';
+                }
+                uyelerHtml += `</div>`;
+
+                let islemButonlari = '';
+                if (isAdmin) {
+                    if (d.durum === 'Pazarda') {
+                        islemButonlari = `<button class="btn btn-sm btn-outline-success w-100 mb-1" onclick="openSatisModal(${d.id})"><i class="fa-solid fa-cart-shopping"></i> Satıldı</button>`;
+                    } else if (d.durum === 'Satıldı' && !d.payOdendi) {
+                        islemButonlari = `<button class="btn btn-sm btn-outline-warning w-100 mb-1" onclick="topluPayVer(${d.id})"><i class="fa-solid fa-check-double"></i> Tümünü Öde</button>`;
+                    } else if (d.durum === 'Satıldı' && d.payOdendi) {
+                        islemButonlari = `<button class="btn btn-sm btn-outline-secondary w-100 mb-1" onclick="payIptal(${d.id})"><i class="fa-solid fa-rotate-left"></i> Geri Al</button>`;
+                    }
+                    islemButonlari += `<button class="btn btn-sm btn-outline-danger w-100" onclick="dropSil(${d.id})">Sil</button>`;
+                }
+
+                let durumBadge = d.durum === 'Pazarda' ? '<span class="badge-status status-pazarda">Pazarda</span>' : 
+                                (!d.payOdendi ? '<span class="badge-status status-satildi">Bekliyor</span>' : '<span class="badge-status status-odendi">Dağıtıldı</span>');
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="text-muted small">${d.eklemeTarihi ? d.eklemeTarihi.replace(' ', '<br>') : '-'}</td>
+                        <td class="text-warning small">${d.satisTarihi ? d.satisTarihi.replace(' ', '<br>') : '<span class="text-muted">-</span>'}</td>
+                        <td class="fw-bold text-white">${d.ad}</td>
+                        <td class="fw-bold text-white">${d.adet}</td>
+                        <td class="text-white">${d.birimFiyat ? Number(d.birimFiyat).toFixed(2) + ' M' : '-'}</td>
+                        <td class="fw-bold text-success">${toplamFiyat ? toplamFiyat.toFixed(2) + ' M' : '-'}</td>
+                        <td class="fw-bold text-gold">${kisiBasiPay ? kisiBasiPay.toFixed(2) + ' M' : '-'}</td>
+                        <td>${uyelerHtml}</td>
+                        <td>${durumBadge}</td>
+                        ${isAdmin ? `<td class="text-end" style="width:130px;">${islemButonlari}</td>` : ''}
+                    </tr>
+                `;
+            });
+
+            updateStats();
+        }
+
+        function updateStats() {
+            let toplamAdet = 0, toplamGelir = 0, bekleyenPayBorcu = 0, bekleyenDegerKasa = 0;
+
+            droplar.forEach(d => {
+                toplamAdet += Number(d.adet);
+                const toplam = Number(d.adet) * Number(d.birimFiyat || 0);
+                const kisiSayisi = Number(d.kisi) || 1;
+                const kisiBasiPay = toplam / kisiSayisi;
+
+                if (d.durum === 'Satıldı') {
+                    toplamGelir += toplam;
+                    if (d.uyeler && d.uyeler.length > 0) {
+                        const odenmeyenKişiSayisi = d.uyeler.filter(u => !u.odendi).length;
+                        bekleyenPayBorcu += (kisiBasiPay * odenmeyenKişiSayisi);
+                    } else if (!d.payOdendi) {
+                        bekleyenPayBorcu += toplam;
+                    }
+                } else {
+                    bekleyenDegerKasa += toplam;
+                }
+            });
+
+            document.getElementById('stat-drop-adet').innerText = toplamAdet;
+            document.getElementById('stat-toplam-gelir').innerText = toplamGelir.toFixed(2) + ' M';
+            document.getElementById('stat-bekleyen-pay').innerText = bekleyenPayBorcu.toFixed(2) + ' M';
+            document.getElementById('stat-bekleyen-deger').innerText = bekleyenDegerKasa.toFixed(2) + ' M';
+        }
+
+        function openSatisModal(id) {
+            if(!isAdmin) return;
+            const drop = droplar.find(d => d.id == id);
+            document.getElementById('modalIndex').value = id;
+            document.getElementById('modalTitle').innerText = drop.ad + ' - Satış';
+            const adetInput = document.getElementById('modalSatilanAdet');
+            adetInput.max = drop.adet; 
+            adetInput.value = drop.adet; 
+            document.getElementById('modalMaxAdet').innerText = drop.adet;
+            document.getElementById('modalBirimFiyat').value = drop.birimFiyat || '';
+            satisModal.show();
+        }
+
+        document.getElementById('satisForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if(!isAdmin) return;
+            const id = parseInt(document.getElementById('modalIndex').value);
+            const birimFiyat = parseFloat(document.getElementById('modalBirimFiyat').value) || 0;
+            const satilanAdet = parseInt(document.getElementById('modalSatilanAdet').value);
+            const dropIndex = droplar.findIndex(d => d.id == id);
+            
+            const simdi = new Date().toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+            if (dropIndex !== -1) {
+                const mevcutDrop = droplar[dropIndex];
+                if (satilanAdet >= mevcutDrop.adet) {
+                    mevcutDrop.birimFiyat = birimFiyat;
+                    mevcutDrop.durum = 'Satıldı';
+                    mevcutDrop.satisTarihi = simdi;
+                } else {
+                    const yeniUyelerKopya = mevcutDrop.uyeler ? mevcutDrop.uyeler.map(u => ({...u})) : [];
+                    const satilanDrop = {
+                        ...mevcutDrop,
+                        id: Date.now() + Math.random(),
+                        adet: satilanAdet,
+                        birimFiyat: birimFiyat,
+                        durum: 'Satıldı',
+                        satisTarihi: simdi,
+                        uyeler: yeniUyelerKopya
+                    };
+                    mevcutDrop.adet -= satilanAdet;
+                    droplar.splice(dropIndex, 0, satilanDrop);
+                }
+                verileriKaydet();
+                renderTable();
+            }
+            satisModal.hide();
+        });
+
+        function dropSil(id) {
+            if(!isAdmin) return;
+            if (confirm('Silmek istediğine emin misin?')) {
+                droplar = droplar.filter(d => d.id != id);
+                verileriKaydet();
+                renderTable();
+            }
+        }
+
+        function tabDegistir(tab, el) {
+            aktifTab = tab;
+            document.querySelectorAll('#tabMenu .nav-link').forEach(n => n.classList.remove('active', 'text-warning', 'text-success'));
+            el.classList.add('active');
+            renderTable();
+        }
+
+        function sifirlaHepsini() {
+            if(!isAdmin) return;
+            if (confirm('TÜM kayıtları sıfırlamak istediğine emin misin?')) {
+                droplar = [];
+                verileriKaydet();
+                renderTable();
+            }
+        }
+    </script>
+</body>
+</html>
